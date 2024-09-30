@@ -1,2 +1,5 @@
 node_modules
 .env
+data.json
+_td_database
+_td_files

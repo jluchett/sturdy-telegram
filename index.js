@@ -53,13 +53,72 @@ app.get('/chats', async (req, res) => {
     const chats = await client.invoke({
       _: 'getChats',
       chat_list: { _: 'chatListMain' },
-      limit: 10,
+      limit: 2,
     });
     res.json(chats);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+// Ruta para enviar un mensaje a un chat
+app.post('/sendMessage', async (req, res) => {
+  const { chatId, message } = req.body;
+
+  try {
+    const response = await client.invoke({
+      _: 'sendMessage',
+      chat_id: chatId,
+      input_message_content: {
+        _: 'inputMessageText',
+        text: {
+          _: 'formattedText',
+          text: message,
+        },
+      },
+    });
+    res.json({ message: 'Message sent', response });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Ruta para buscar chats por nombre en la lista de chats locales conocidos
+app.get('/searchChats', async (req, res) => {
+  const { query } = req.query;
+
+  try {
+    // Invoca el método searchChats con el query y un límite de resultados
+    const searchResults = await client.invoke({
+      _: 'searchChats',
+      query: query || '',  // Si el query está vacío, trae los últimos 50 chats
+      limit: 5,           // Número máximo de resultados
+    });
+    
+    // Envía la respuesta JSON con los resultados
+    res.json(searchResults);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+// Ruta para obtener detalles de un chat
+app.get('/chat/:chatId', async (req, res) => {
+  const chatId = parseInt(req.params.chatId);
+
+  try {
+    const chatInfo = await client.invoke({
+      _: 'getChat',
+      chat_id: chatId,
+    });
+    res.json(chatInfo);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 // Ruta para iniciar cerrar sesión
 app.post('/logout', async (req, res) => {
