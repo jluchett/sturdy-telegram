@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertir datos a JSON</title>
+</head>
+<body>
+    <h1>Convertir Datos a JSON</h1>
+    <textarea id="inputData" rows="10" cols="50" placeholder="Ingresa los datos aquí..."></textarea>
+    <br><br>
+    <button onclick="convertToJSON()">Convertir a JSON</button>
+    <h2>Resultado JSON:</h2>
+    <pre id="jsonResult"></pre>
+
+    <script>
+        function convertToJSON() {
+            const inputData = document.getElementById("inputData").value;
+
+            try {
+                // Reemplazos para formar JSON válido
+                let formattedData = `[${inputData
+                    .replace(/"user":\s*\{/g, '{') // Eliminar clave "user" duplicada
+                    .replace(/_:\s*'user'/g, '"_": "user"') // Ajustar clave "_"
+                    .replace(/(\w+):/g, '"$1":') // Comillas alrededor de todas las claves
+                    .replace(/'/g, '"') // Cambiar comillas simples a dobles
+                    .replace(/\},\s*\{/g, '},{') // Comas entre objetos JSON
+                }]`;
+
+                // Remover comillas de valores numéricos en phone_number
+                formattedData = formattedData.replace(/"phone_number":\s*"(\d+)"/g, '"phone_number": $1');
+
+                // Convertir a JSON
+                const jsonObject = JSON.parse(formattedData);
+                document.getElementById("jsonResult").textContent = JSON.stringify(jsonObject, null, 2);
+            } catch (error) {
+                document.getElementById("jsonResult").textContent = "Error al convertir: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
