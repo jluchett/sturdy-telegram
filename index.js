@@ -31,7 +31,7 @@ async function loginTelegram() {
 app.post('/login', async (req, res) => {
   try {
     await loginTelegram();
-    res.json({ message: 'Logged in to Telegram' });
+    res.json({ message: 'Iniciaste sesión en Telegram' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -120,11 +120,11 @@ app.get('/chat/:chatId', async (req, res) => {
 });
 
 
-// Ruta para iniciar cerrar sesión
+// Ruta para cerrar sesión
 app.post('/logout', async (req, res) => {
     try {
       await client.close();
-      res.json({ message: 'Salimos de Telegram' });
+      res.json({ message: 'Has cerrado tu sesión de Telegram' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -134,5 +134,5 @@ app.post('/logout', async (req, res) => {
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
