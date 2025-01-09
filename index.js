@@ -53,7 +53,7 @@ app.get('/chats', async (req, res) => {
     const chats = await client.invoke({
       _: 'getChats',
       chat_list: { _: 'chatListMain' },
-      limit: 2,
+      limit: 10,
     });
     res.json(chats);
   } catch (error) {
